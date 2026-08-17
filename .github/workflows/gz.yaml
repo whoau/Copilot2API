@@ -1,0 +1,28 @@
+name: Build Linux Binary
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Build
+        run: |
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+          go build -o m365-copilot2api ./cmd/server
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: m365-copilot2api-linux
+          path: m365-copilot2api
